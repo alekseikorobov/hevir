@@ -361,6 +361,10 @@ class MyApp:
         except Exception as ex:
             print(f'[ERROR] {ex}')
             traceback.print_exc()
+            self.label1.configure(text=f'ERROR {ex}',image='')
+            self.label1.pack(fill=tk.BOTH,expand=True)
+            self.image = None
+            self.photoImage = None
 
     def start_position(self):
         #w = 800 # width for the Tk root
