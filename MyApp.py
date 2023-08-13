@@ -1,11 +1,11 @@
 #Import tkinter
 import tkinter as tk
+from pillow_heif import register_heif_opener
 import os
 #from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import ttk     # подключаем пакет ttk
 from tkinter import filedialog as fd
-import pyheif
 from StatusBar import StatusBar
 
 import traceback
@@ -16,6 +16,7 @@ fp = functools.partial
 class MyApp:
 
     def __init__(self, root:tk.Tk,form_width=800,form_height=650,full_path = None) -> None:
+        register_heif_opener()
         self.root = root
         self.images_list = []
         self.root.title("View image list")
@@ -351,18 +352,10 @@ class MyApp:
                 return
             
             self.label1.pack_forget()
+            
+            self.image = Image.open(path)
 
-            heif_file = pyheif.read(path)
-            self.image = Image.frombytes(
-                heif_file.mode,
-                heif_file.size,
-                heif_file.data,
-                "raw",
-                heif_file.mode,
-                heif_file.stride,
-                )
-
-            self.image_width, self.image_height = heif_file.size
+            self.image_width, self.image_height = self.image.width,self.image.height
 
             self.update_image_size()
         except Exception as ex:
@@ -444,6 +437,8 @@ class MyApp:
             aspect_ratio = min(frame_width / self.image_width, frame_height / self.image_height) * self.shared_scale
             self.new_width = int(self.image_width * aspect_ratio)
             self.new_height = int(self.image_height * aspect_ratio)
+            if self.new_width== 0 or self.new_height==0:
+                return            
             image_resize = image_resize.resize((self.new_width, self.new_height)) #, Image.ANTIALIAS
 
             self.photoImage = ImageTk.PhotoImage(image_resize)

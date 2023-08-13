@@ -6,7 +6,6 @@ import os
 from PIL import Image, ImageTk
 from tkinter import ttk
 from tkinter import filedialog as fd
-import pyheif
 from StatusBar import StatusBar
 
 import functools
@@ -14,8 +13,11 @@ fp = functools.partial
 
 if __name__ == '__main__':    
     full_path=None
+    # for test sys.argv.append('doc/example/2023-03-18 15-44-05.HEIC')
     if len(sys.argv)>1:
         full_path = sys.argv[1]
+        print('-'*40)
+        print(f'{os.getcwd()=}')
                 
         if not os.path.exists(full_path):
             print(f'not exists file - {full_path}')
